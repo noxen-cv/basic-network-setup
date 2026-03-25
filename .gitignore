@@ -1,3 +1,5 @@
 .DS_Store
 .network.env.runtime
 environments/dev/network.env
+environments/dev/.env
+docs/*.txt

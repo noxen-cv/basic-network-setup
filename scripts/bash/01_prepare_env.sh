@@ -1,11 +1,20 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-ENV_FILE="${1:-environments/dev/network.env}"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
+ENV_FILE="${1:-$REPO_ROOT/environments/dev/network.env}"
+
+if [[ "$ENV_FILE" != /* ]]; then
+  # Accept repo-root-relative paths regardless of current directory.
+  if [[ -f "$REPO_ROOT/$ENV_FILE" ]]; then
+    ENV_FILE="$REPO_ROOT/$ENV_FILE"
+  fi
+fi
 
 if [[ ! -f "$ENV_FILE" ]]; then
   echo "Missing env file: $ENV_FILE"
-  echo "Copy environments/dev/network.env.example to environments/dev/network.env and edit values."
+  echo "Copy $REPO_ROOT/environments/dev/network.env.example to $REPO_ROOT/environments/dev/network.env and edit values."
   exit 1
 fi
 
@@ -16,7 +25,7 @@ RANDOM_SUFFIX="$(openssl rand -hex 3)"
 RESOURCE_GROUP="${RESOURCE_GROUP_PREFIX}-${RANDOM_SUFFIX}"
 VNET_NAME="${VNET_NAME_PREFIX}-${RANDOM_SUFFIX}"
 
-cat > .network.env.runtime <<EOF
+cat > $REPO_ROOT/.network.env.runtime <<EOF
 LOCATION="$LOCATION"
 RESOURCE_GROUP="$RESOURCE_GROUP"
 VNET_NAME="$VNET_NAME"
