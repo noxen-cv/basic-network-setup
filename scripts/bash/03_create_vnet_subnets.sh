@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+
+
 if [[ ! -f .network.env.runtime ]]; then
   echo "Missing .network.env.runtime. Run scripts/bash/01_prepare_env.sh first."
   exit 1
