@@ -1,15 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-
-
-if [[ ! -f .network.env.runtime ]]; then
-  echo "Missing .network.env.runtime. Run scripts/bash/01_prepare_env.sh first."
-  exit 1
-fi
-
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # shellcheck disable=SC1091
-source .network.env.runtime
+source "$SCRIPT_DIR/lib/common.sh"
+
+common::load_runtime_env
 
 az network vnet create \
   --resource-group "$RESOURCE_GROUP" \
